@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<FavoriteContext>(options => options.UseSqlServer("Data Source=DESKTOP-4KKPTIM; Initial Catalog=favorites; Integrated Security=SSPI;"));
+builder.Services.AddDbContext<FavoriteContext>(options => options.UseSqlServer("Data Source=DESKTOP-4KKPTIM; Initial Catalog=favorites; Integrated Security=SSPI; TrustServerCertificate=true"));
 
 var app = builder.Build();
 
@@ -22,8 +22,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.MapControllers();
+
+app.UseAuthorization();
 
 app.Run();
