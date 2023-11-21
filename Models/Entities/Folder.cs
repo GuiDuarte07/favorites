@@ -1,4 +1,4 @@
-﻿namespace favorites.Models
+﻿namespace favorites.Models.Entities
 {
     public class Folder
     {

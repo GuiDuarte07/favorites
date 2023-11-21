@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using favorites.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace favorites.Models
 {
