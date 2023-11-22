@@ -11,10 +11,12 @@ namespace favorites.Controllers
     public class UserController : ControllerBase
     {
         private readonly FavoriteContext _context;
+        private readonly IHashService _hashService;
 
-        public UserController(FavoriteContext context)
+        public UserController(FavoriteContext context, IHashService hashService)
         {
             _context = context;
+            _hashService = hashService;
         }
 
         [HttpPost]
@@ -27,7 +29,7 @@ namespace favorites.Controllers
             }
 
             // Fazendo o hash da senha
-            string hashedPassword = HashService.HashPassword(userDTO.Password);
+            string hashedPassword = _hashService.HashPassword(userDTO.Password);
 
             // Instânciando uma nova classe User com os dados do userDTO
             var user = new User { Name = userDTO.Name, Email = userDTO.Email, Password = hashedPassword };
@@ -36,7 +38,7 @@ namespace favorites.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, new UserInfoDTO { Email = user.Email, Name = user.Name, Id = user.Id });
         }
 
         [HttpGet("{id}")]

@@ -3,9 +3,9 @@ using System.Security.Cryptography;
 
 namespace favorites.Services
 {
-    public static class HashService
+    public class HashService: IHashService
     {
-        public static string HashPassword(string password)
+        public string HashPassword(string password)
         {
             using (var sha256 = new SHA256Managed())
             {
