@@ -1,4 +1,6 @@
 using favorites.Models;
+using favorites.Repositories;
+using favorites.Repositories.Interfaces;
 using favorites.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +16,7 @@ builder.Services.AddDbContext<FavoriteContext>(options => options.UseSqlServer("
 
 // Services
 builder.Services.AddTransient<IHashService, HashService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
