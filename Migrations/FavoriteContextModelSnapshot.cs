@@ -22,7 +22,7 @@ namespace favorites.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("favorites.Models.Favorite", b =>
+            modelBuilder.Entity("favorites.Models.Entities.Favorite", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,44 +30,49 @@ namespace favorites.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FaviconUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("FavoriteType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Fixed")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<long>("FolderId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Notes")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FolderId");
 
-                    b.ToTable("Favorites");
+                    b.ToTable("Favorites", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Favorite");
+                    b.HasDiscriminator<string>("FavoriteType").HasValue("Favorite");
 
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("favorites.Models.Folder", b =>
+            modelBuilder.Entity("favorites.Models.Entities.Folder", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,17 +80,17 @@ namespace favorites.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("FolderId")
-                        .HasColumnType("bigint");
-
                     b.Property<bool>("IsFavoriteFolder")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)");
 
-                    b.Property<long?>("Parent_folder")
+                    b.Property<long?>("ParentFolderId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("UserId")
@@ -93,14 +98,14 @@ namespace favorites.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FolderId");
+                    b.HasIndex("ParentFolderId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Folders");
+                    b.ToTable("Folders", (string)null);
                 });
 
-            modelBuilder.Entity("favorites.Models.User", b =>
+            modelBuilder.Entity("favorites.Models.Entities.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,38 +115,51 @@ namespace favorites.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(64)
+                        .HasColumnType("char(64)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("favorites.Models.ContentFavorite", b =>
+            modelBuilder.Entity("favorites.Models.Entities.ContentFavorite", b =>
                 {
-                    b.HasBaseType("favorites.Models.Favorite");
+                    b.HasBaseType("favorites.Models.Entities.Favorite");
 
                     b.Property<bool>("Complete")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("ContentType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<long?>("TimeSpentTicks")
+                        .HasColumnType("bigint")
+                        .HasColumnName("TimeSpent");
 
                     b.HasDiscriminator().HasValue("ContentFavorite");
                 });
 
-            modelBuilder.Entity("favorites.Models.Favorite", b =>
+            modelBuilder.Entity("favorites.Models.Entities.Favorite", b =>
                 {
-                    b.HasOne("favorites.Models.Folder", "Folder")
+                    b.HasOne("favorites.Models.Entities.Folder", "Folder")
                         .WithMany("Favorites")
                         .HasForeignKey("FolderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -150,29 +168,32 @@ namespace favorites.Migrations
                     b.Navigation("Folder");
                 });
 
-            modelBuilder.Entity("favorites.Models.Folder", b =>
+            modelBuilder.Entity("favorites.Models.Entities.Folder", b =>
                 {
-                    b.HasOne("favorites.Models.Folder", null)
-                        .WithMany("Folders")
-                        .HasForeignKey("FolderId");
+                    b.HasOne("favorites.Models.Entities.Folder", "ParentFolder")
+                        .WithMany("SubFolders")
+                        .HasForeignKey("ParentFolderId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("favorites.Models.User", "User")
+                    b.HasOne("favorites.Models.Entities.User", "User")
                         .WithMany("Folders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("ParentFolder");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("favorites.Models.Folder", b =>
+            modelBuilder.Entity("favorites.Models.Entities.Folder", b =>
                 {
                     b.Navigation("Favorites");
 
-                    b.Navigation("Folders");
+                    b.Navigation("SubFolders");
                 });
 
-            modelBuilder.Entity("favorites.Models.User", b =>
+            modelBuilder.Entity("favorites.Models.Entities.User", b =>
                 {
                     b.Navigation("Folders");
                 });

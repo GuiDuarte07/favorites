@@ -12,7 +12,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<FavoriteContext>(options => options.UseSqlServer("Data Source=DESKTOP-4KKPTIM; Initial Catalog=favorites; Integrated Security=SSPI; TrustServerCertificate=true"));
 
-
 // Services
 builder.Services.AddTransient<IHashService, HashService>();
 

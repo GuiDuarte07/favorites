@@ -22,6 +22,9 @@ namespace favorites.Models
                 .HasValue<ContentFavorite>("ContentFavorite");
 
             modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new FolderMap());
+            modelBuilder.ApplyConfiguration(new FavoriteMap());
+            modelBuilder.ApplyConfiguration(new ContentFavoriteMap());
         }
     }
 }

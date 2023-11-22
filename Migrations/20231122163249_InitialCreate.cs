@@ -16,9 +16,9 @@ namespace favorites.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "char(64)", maxLength: 64, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,26 +31,26 @@ namespace favorites.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsFavoriteFolder = table.Column<bool>(type: "bit", nullable: false),
-                    Parent_folder = table.Column<long>(type: "bigint", nullable: true),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
-                    FolderId = table.Column<long>(type: "bigint", nullable: true)
+                    Name = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false),
+                    IsFavoriteFolder = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    ParentFolderId = table.Column<long>(type: "bigint", nullable: true),
+                    UserId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Folders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Folders_Folders_FolderId",
-                        column: x => x.FolderId,
+                        name: "FK_Folders_Folders_ParentFolderId",
+                        column: x => x.ParentFolderId,
                         principalTable: "Folders",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Folders_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,15 +59,16 @@ namespace favorites.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FaviconUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Fixed = table.Column<bool>(type: "bit", nullable: false),
+                    Name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    Url = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
+                    FaviconUrl = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
+                    Notes = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
+                    Fixed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     FolderId = table.Column<long>(type: "bigint", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Complete = table.Column<bool>(type: "bit", nullable: true)
+                    FavoriteType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Complete = table.Column<bool>(type: "bit", nullable: true, defaultValue: false),
+                    TimeSpent = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -86,14 +87,20 @@ namespace favorites.Migrations
                 column: "FolderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Folders_FolderId",
+                name: "IX_Folders_ParentFolderId",
                 table: "Folders",
-                column: "FolderId");
+                column: "ParentFolderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Folders_UserId",
                 table: "Folders",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />
