@@ -2,7 +2,7 @@
 using favorites.Models.DTOs.User;
 using favorites.Models.Entities;
 using favorites.Repositories.Interfaces;
-using favorites.Services;
+using favorites.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace favorites.Repositories
@@ -18,7 +18,7 @@ namespace favorites.Repositories
             _hashService = hashService;
         }
 
-        public async Task<UserInfoDTO> CreateUser(CreateUserDO userDTO)
+        public async Task<UserInfoDTO> CreateUserAsync(CreateUserDO userDTO)
         {
             // Fazendo o hash da senha
             string hashedPassword = _hashService.HashPassword(userDTO.Password);
@@ -33,7 +33,7 @@ namespace favorites.Repositories
             return new UserInfoDTO { Email = user.Email, Name = user.Name, Id = user.Id };
         }
 
-        public async Task<UserInfoDTO?> GetUserById(long id)
+        public async Task<UserInfoDTO?> GetUserByIdAsync(long id)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -46,5 +46,13 @@ namespace favorites.Repositories
 
             return userInfo;
         }
+
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            return user;
+        }
+
     }
 }

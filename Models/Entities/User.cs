@@ -26,7 +26,7 @@ namespace favorites.Models.Entities
             builder.Property(u => u.Email).IsRequired().HasMaxLength(100).HasColumnType("varchar(100)");
             builder.HasIndex(u => u.Email).IsUnique();
 
-            builder.Property(u => u.Password).IsRequired().HasMaxLength(64).HasColumnType("char(64)");
+            builder.Property(u => u.Password).IsRequired().HasMaxLength(70).HasColumnType("varchar(70)");
         }
     }
 }

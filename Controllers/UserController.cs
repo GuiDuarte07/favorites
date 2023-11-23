@@ -3,6 +3,7 @@ using favorites.Models.DTOs.User;
 using favorites.Models.Entities;
 using favorites.Repositories.Interfaces;
 using favorites.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace favorites.Controllers
@@ -26,16 +27,17 @@ namespace favorites.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userInfoDTO = await _userRepository.CreateUser(userDTO);
+            var userInfoDTO = await _userRepository.CreateUserAsync(userDTO);
 
             return CreatedAtAction(nameof(GetUser), new { id = userInfoDTO.Id }, userInfoDTO);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserInfoDTO>> GetUser(long id)
         {
             
-            var userInfo = await _userRepository.GetUserById(id);
+            var userInfo = await _userRepository.GetUserByIdAsync(id);
 
             if (userInfo == null)
             {

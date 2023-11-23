@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Security.Cryptography;
+using favorites.Services.Interfaces;
 
 namespace favorites.Services
 {

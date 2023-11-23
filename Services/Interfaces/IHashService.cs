@@ -1,4 +1,4 @@
-﻿namespace favorites.Services
+﻿namespace favorites.Services.Interfaces
 {
     public interface IHashService
     {
