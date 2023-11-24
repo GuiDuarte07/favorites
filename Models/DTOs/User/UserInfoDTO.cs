@@ -7,6 +7,6 @@ namespace favorites.Models.DTOs.User
         public long Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public List<Folder>? Folders { get; set; }
+        public List<favorites.Models.Entities.Folder> Folders { get; set; }
     }
 }

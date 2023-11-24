@@ -3,8 +3,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Security.Claims;
 using favorites.Services.Interfaces;
+using favorites.Models.DTOs.User;
 
 namespace favorites.Services
 {
@@ -37,6 +37,18 @@ namespace favorites.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
+        }
+
+        public long GetUserIdFromToken(string token)
+        {
+            // Decodificar o token para recuperar as informações
+            var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+            var tokenSimples = handler.ReadToken(token) as System.IdentityModel.Tokens.Jwt.JwtSecurityToken;
+
+            // Acessar o ID do usuário do token (supondo que esteja armazenado como um claim)
+            var userId = tokenSimples?.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+
+            return long.Parse(userId);
         }
     }
 }

@@ -10,7 +10,6 @@ namespace favorites.Models.Entities
         public string Name { get; set; } = string.Empty;
         public bool IsFavoriteFolder { get; set; }
 
-
         public long? ParentFolderId { get; set; }
         public Folder? ParentFolder { get; set; }
 
@@ -34,7 +33,7 @@ namespace favorites.Models.Entities
             builder.Property(f => f.IsFavoriteFolder).IsRequired().HasDefaultValue(false);
 
             builder.HasOne(f => f.User) // Tem somente um user
-                .WithMany(f => f.Folders) // Um user tem vários
+                .WithMany(f => f.Folders) // Um user tem vários folders
                 .HasForeignKey(f => f.UserId) // Chave estrangeira
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);

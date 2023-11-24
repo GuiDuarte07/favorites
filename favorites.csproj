@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\DTOs\User\NewFolder\**" />
+    <Compile Remove="NewFolder\**" />
+    <Content Remove="Models\DTOs\User\NewFolder\**" />
+    <Content Remove="NewFolder\**" />
+    <EmbeddedResource Remove="Models\DTOs\User\NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="Models\DTOs\User\NewFolder\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\DTOs\Folder.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14">

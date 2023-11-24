@@ -80,8 +80,10 @@ builder.Services.AddAuthentication(options =>
 // Services
 builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IFolderRepository, FolderRepository>();
 
 var app = builder.Build();
 
