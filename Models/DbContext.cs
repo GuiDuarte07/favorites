@@ -12,19 +12,12 @@ namespace favorites.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Folder> Folders { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
-        public DbSet<ContentFavorite> ContentFavorites { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Favorite>()
-                .HasDiscriminator<string>("FavoriteType")
-                .HasValue<Favorite>("Favorite")
-                .HasValue<ContentFavorite>("ContentFavorite");
-
             modelBuilder.ApplyConfiguration(new UserMap());
             modelBuilder.ApplyConfiguration(new FolderMap());
             modelBuilder.ApplyConfiguration(new FavoriteMap());
-            modelBuilder.ApplyConfiguration(new ContentFavoriteMap());
         }
     }
 }

@@ -18,7 +18,7 @@ namespace favorites.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "char(64)", maxLength: 64, nullable: false)
+                    Password = table.Column<string>(type: "varchar(70)", maxLength: 70, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,11 +64,10 @@ namespace favorites.Migrations
                     FaviconUrl = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
                     Notes = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
                     Fixed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    FolderId = table.Column<long>(type: "bigint", nullable: false),
-                    FavoriteType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContentType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Complete = table.Column<bool>(type: "bit", nullable: true, defaultValue: false),
-                    TimeSpent = table.Column<long>(type: "bigint", nullable: true)
+                    ContentType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Complete = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    TimeSpent = table.Column<long>(type: "bigint", nullable: true),
+                    FolderId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {

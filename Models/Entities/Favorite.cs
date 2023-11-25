@@ -11,6 +11,9 @@ namespace favorites.Models.Entities
         public string? FaviconUrl { get; set; }
         public string Notes { get; set; } = string.Empty;
         public bool Fixed { get; set; } = false;
+        public string ContentType { get; set; } = string.Empty;
+        public bool Complete { get; set; } = false;
+        public long? TimeSpentTicks { get; set; } // Armazenar os ticks do TimeSpan
 
         public long FolderId { get; set; }
         public Folder? Folder { get; set; }
@@ -29,6 +32,9 @@ namespace favorites.Models.Entities
             builder.Property(f => f.FaviconUrl).IsRequired(false).HasMaxLength(255).HasColumnType("varchar(255)");
             builder.Property(f => f.Notes).HasMaxLength(500).HasColumnType("varchar(500)");
             builder.Property(f => f.Fixed).IsRequired().HasDefaultValue(false);
+            builder.Property(f => f.ContentType).IsRequired().HasMaxLength(50);
+            builder.Property(f => f.Complete).IsRequired().HasDefaultValue(false);
+            builder.Property(f => f.TimeSpentTicks).IsRequired(false).HasColumnName("TimeSpent").HasColumnType("bigint");
 
             builder.HasOne(f => f.Folder) // Um favorite pertence a um folder
                 .WithMany(f => f.Favorites) // Um folder pode ter muitos favorites

@@ -12,8 +12,8 @@ using favorites.Models;
 namespace favorites.Migrations
 {
     [DbContext(typeof(FavoriteContext))]
-    [Migration("20231123171119_userPasswordType")]
-    partial class userPasswordType
+    [Migration("20231125012238_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,13 +33,19 @@ namespace favorites.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<bool>("Complete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("FaviconUrl")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
-
-                    b.Property<string>("FavoriteType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Fixed")
                         .ValueGeneratedOnAdd()
@@ -59,6 +65,10 @@ namespace favorites.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
+                    b.Property<long?>("TimeSpentTicks")
+                        .HasColumnType("bigint")
+                        .HasColumnName("TimeSpent");
+
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -69,10 +79,6 @@ namespace favorites.Migrations
                     b.HasIndex("FolderId");
 
                     b.ToTable("Favorites", (string)null);
-
-                    b.HasDiscriminator<string>("FavoriteType").HasValue("Favorite");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("favorites.Models.Entities.Folder", b =>
@@ -137,27 +143,6 @@ namespace favorites.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("favorites.Models.Entities.ContentFavorite", b =>
-                {
-                    b.HasBaseType("favorites.Models.Entities.Favorite");
-
-                    b.Property<bool>("Complete")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<long?>("TimeSpentTicks")
-                        .HasColumnType("bigint")
-                        .HasColumnName("TimeSpent");
-
-                    b.HasDiscriminator().HasValue("ContentFavorite");
                 });
 
             modelBuilder.Entity("favorites.Models.Entities.Favorite", b =>

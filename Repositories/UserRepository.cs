@@ -35,7 +35,7 @@ namespace favorites.Repositories
 
         public async Task<User?> GetUserByIdAsync(long id)
         {
-            var userInfo = await _context.Users.Include(u => u.Folders).FirstOrDefaultAsync(u => u.Id == id)
+            var userInfo = await _context.Users.Include(u => u.Folders).FirstOrDefaultAsync(u => u.Id == id);
 
             if (userInfo == null)
             {
