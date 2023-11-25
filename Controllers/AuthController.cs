@@ -1,4 +1,5 @@
-﻿using favorites.Models.DTOs.User;
+﻿using favorites.Models.DTOs.Folder;
+using favorites.Models.DTOs.User;
 using favorites.Repositories.Interfaces;
 using favorites.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +36,25 @@ namespace favorites.Controllers
 
             return new
             {
-                user = new UserInfoDTO() { Email = user.Email, Id = user.Id, Name = user.Name, Folders = user.Folders },
+                user = new InfoUserDTO()
+                {
+                    Email = user.Email,
+                    Id = user.Id,
+                    Name = user.Name,
+                    Folders = user.Folders
+                                .Select(f => new InfoFolderDTO()
+                                {
+                                    Id = f.Id,
+                                    Name = f.Name,
+                                    UserId = user.Id,
+                                    SubFolders = f.SubFolders
+                                        .Select(sb => new SubFolderDTO()
+                                        {
+                                            Id = sb.Id,
+                                            Name = sb.Name
+                                        }).ToList(),
+                                }).ToList()
+                },
                 token
             };
         }

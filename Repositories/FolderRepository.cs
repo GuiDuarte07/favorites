@@ -28,48 +28,11 @@ namespace favorites.Repositories
             return createdFolder.Entity;
         }
 
-        public InfoFolderDTO? GetFolder(long id)
+        public Folder? GetFolder(long id)
         {
-            var folder = _context.Folders
-                .Where(f => f.Id == id)
-                .Select(f => new
-                {
-                    f.Id,
-                    f.Name,
-                    User = new
-                    {
-                        f.User.Id
-                    },
-                    SubFolders = f.SubFolders.Select(sf => new
-                    {
-                        sf.Id,
-                        sf.Name
-                    }).ToList()
-                }).FirstOrDefault();
+            var folder = _context.Folders.Include(f => f.User).Include(f => f.SubFolders).FirstOrDefault(f => f.Id == id);
 
-            var infoFolder = new InfoFolderDTO
-            {
-                Id = id,
-                Name = folder.Name,
-                UserId = folder.User.Id,
-                SubFolders = folder.SubFolders.Select(sf => new SubFolderDTO
-                {
-                    Id = sf.Id,
-                    Name = sf.Name
-                }).ToList()
-            };
-
-            return infoFolder;
-
-            /*,
-            Favorites = f.Favorites.Select(fav => new
-            {
-                fav.Id,
-                fav.Name,
-                fav.Fixed,
-                fav.Url
-            })
-            */
+            return folder;
         }
 
         public async Task<Folder?> UpdateFolderAsync(UpdateFolderDTO folderUpdateInfo)

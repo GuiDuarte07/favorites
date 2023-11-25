@@ -1,4 +1,5 @@
 ﻿using favorites.Models;
+using favorites.Models.DTOs.Folder;
 using favorites.Models.DTOs.User;
 using favorites.Models.Entities;
 using favorites.Repositories.Interfaces;
@@ -19,7 +20,7 @@ namespace favorites.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(CreateUserDO userDTO)
+        public async Task<ActionResult<InfoUserDTO>> CreateUser(CreateUserDO userDTO)
         {
             // Não sei se essa verificação é necessária
             if (!ModelState.IsValid)
@@ -34,15 +35,33 @@ namespace favorites.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserInfoDTO>> GetUser(long id)
+        public async Task<ActionResult<InfoUserDTO>> GetUser(long id)
         {
             
-            var userInfo = await _userRepository.GetUserByIdAsync(id);
+            var user = await _userRepository.GetUserByIdAsync(id);
 
-            if (userInfo == null)
+            if (user == null)
             {
                 return NotFound();
             }
+
+            var userInfo = new InfoUserDTO() 
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Folders = user.Folders.Select(folder => new InfoFolderDTO
+                {
+                    Id = folder.Id,
+                    Name = folder.Name,
+                    UserId = user.Id,
+                    SubFolders = folder.SubFolders.Select(subFolder => new SubFolderDTO
+                    {
+                        Id = subFolder.Id,
+                        Name = subFolder.Name
+                    }).ToList()
+                }).ToList()
+            };
 
             return userInfo;
         }

@@ -5,6 +5,7 @@ using favorites.Services;
 using favorites.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace favorites.Controllers
 {
@@ -51,7 +52,15 @@ namespace favorites.Controllers
                 return NotFound();
             }
 
-            return folder;
+            var infoFolder = new InfoFolderDTO() 
+            {
+                Id = folder.Id, 
+                Name = folder.Name, 
+                UserId = folder.User.Id,
+                SubFolders = folder.SubFolders.Select(sb => new SubFolderDTO() { Id = sb.Id, Name = sb.Name}).ToList()
+            };
+
+            return infoFolder;
         }
 
         [Authorize]

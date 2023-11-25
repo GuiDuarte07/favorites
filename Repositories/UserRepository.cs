@@ -18,7 +18,7 @@ namespace favorites.Repositories
             _hashService = hashService;
         }
 
-        public async Task<UserInfoDTO> CreateUserAsync(CreateUserDO userDTO)
+        public async Task<User> CreateUserAsync(CreateUserDO userDTO)
         {
             // Fazendo o hash da senha
             string hashedPassword = _hashService.HashPassword(userDTO.Password);
@@ -27,22 +27,20 @@ namespace favorites.Repositories
             var user = new User { Name = userDTO.Name, Email = userDTO.Email, Password = hashedPassword };
 
 
-            _context.Users.Add(user);
+            var createdUser = _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return new UserInfoDTO { Email = user.Email, Name = user.Name, Id = user.Id };
+            return createdUser.Entity;
         }
 
-        public async Task<UserInfoDTO?> GetUserByIdAsync(long id)
+        public async Task<User?> GetUserByIdAsync(long id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var userInfo = await _context.Users.Include(u => u.Folders).FirstOrDefaultAsync(u => u.Id == id)
 
-            if (user == null)
+            if (userInfo == null)
             {
                 return null;
             }
-
-            var userInfo = new UserInfoDTO() { Email = user.Email, Folders = user.Folders, Id = user.Id, Name = user.Name };
 
             return userInfo;
         }

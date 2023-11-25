@@ -9,6 +9,6 @@ namespace favorites.Repositories.Interfaces
 
         public Task<Folder?> UpdateFolderAsync(UpdateFolderDTO folderUpdateInfo);
 
-        public InfoFolderDTO? GetFolder(long id);
+        public Folder? GetFolder(long id);
     }
 }
