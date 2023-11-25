@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using favorites.Models;
 
@@ -11,9 +12,11 @@ using favorites.Models;
 namespace favorites.Migrations
 {
     [DbContext(typeof(FavoriteContext))]
-    partial class FavoriteContextModelSnapshot : ModelSnapshot
+    [Migration("20231125014500_notRequiredFavorite")]
+    partial class notRequiredFavorite
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

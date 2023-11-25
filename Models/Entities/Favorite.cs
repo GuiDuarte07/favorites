@@ -9,10 +9,10 @@ namespace favorites.Models.Entities
         public string Name { get; set; } = string.Empty;
         public string Url { get; set; } = string.Empty;
         public string? FaviconUrl { get; set; }
-        public string Notes { get; set; } = string.Empty;
+        public string? Notes { get; set; } = string.Empty;
         public bool Fixed { get; set; } = false;
         public string ContentType { get; set; } = string.Empty;
-        public bool Complete { get; set; } = false;
+        public bool? Complete { get; set; } = false;
         public long? TimeSpentTicks { get; set; } // Armazenar os ticks do TimeSpan
 
         public long FolderId { get; set; }
