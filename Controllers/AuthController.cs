@@ -41,19 +41,19 @@ namespace favorites.Controllers
                     Email = user.Email,
                     Id = user.Id,
                     Name = user.Name,
-                    Folders = user.Folders
+                    Folders = user.Folders?
                                 .Select(f => new InfoFolderDTO()
                                 {
                                     Id = f.Id,
                                     Name = f.Name,
                                     UserId = user.Id,
-                                    SubFolders = f.SubFolders
+                                    SubFolders = f.SubFolders?
                                         .Select(sb => new SubFolderDTO()
                                         {
                                             Id = sb.Id,
                                             Name = sb.Name
-                                        }).ToList(),
-                                }).ToList()
+                                        }).ToList() ?? new List<SubFolderDTO>(),
+                                }).ToList() ?? new List<InfoFolderDTO>(),
                 },
                 token
             };

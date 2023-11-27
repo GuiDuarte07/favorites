@@ -4,7 +4,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using favorites.Services.Interfaces;
-using favorites.Models.DTOs.User;
 
 namespace favorites.Services
 {
@@ -48,7 +47,7 @@ namespace favorites.Services
             // Acessar o ID do usuário do token (supondo que esteja armazenado como um claim)
             var userId = tokenSimples?.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
 
-            return long.Parse(userId);
+            return long.Parse(userId ?? "-1");
         }
     }
 }

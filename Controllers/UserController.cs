@@ -1,9 +1,6 @@
-﻿using favorites.Models;
-using favorites.Models.DTOs.Folder;
+﻿using favorites.Models.DTOs.Folder;
 using favorites.Models.DTOs.User;
-using favorites.Models.Entities;
 using favorites.Repositories.Interfaces;
-using favorites.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,17 +47,17 @@ namespace favorites.Controllers
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Folders = user.Folders.Select(folder => new InfoFolderDTO
+                Folders = user.Folders?.Select(folder => new InfoFolderDTO
                 {
                     Id = folder.Id,
                     Name = folder.Name,
                     UserId = user.Id,
-                    SubFolders = folder.SubFolders.Select(subFolder => new SubFolderDTO
+                    SubFolders = folder.SubFolders?.Select(subFolder => new SubFolderDTO
                     {
                         Id = subFolder.Id,
                         Name = subFolder.Name
-                    }).ToList()
-                }).ToList()
+                    }).ToList() ?? new List<SubFolderDTO>()
+                }).ToList() ?? new List<InfoFolderDTO>()
             };
 
             return userInfo;

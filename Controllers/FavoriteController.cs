@@ -1,7 +1,6 @@
 ﻿using favorites.Models.DTOs.Favorite;
 using favorites.Models.Entities;
 using favorites.Repositories.Interfaces;
-using favorites.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

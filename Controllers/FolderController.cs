@@ -1,11 +1,9 @@
 ﻿using favorites.Models.DTOs.Folder;
 using favorites.Models.Entities;
 using favorites.Repositories.Interfaces;
-using favorites.Services;
 using favorites.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Operations;
 
 namespace favorites.Controllers
 {
@@ -30,11 +28,10 @@ namespace favorites.Controllers
 
             if (token == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
 
             long userId = _tokenService.GetUserIdFromToken(token);
-            Console.WriteLine(userId);
 
             var createdFolder = await _folderRepository.CreateFolderAsync(folder, userId);
 
@@ -55,9 +52,9 @@ namespace favorites.Controllers
             var infoFolder = new InfoFolderDTO() 
             {
                 Id = folder.Id, 
-                Name = folder.Name, 
-                UserId = folder.User.Id,
-                SubFolders = folder.SubFolders.Select(sb => new SubFolderDTO() { Id = sb.Id, Name = sb.Name}).ToList()
+                Name = folder.Name,
+                UserId = folder.User?.Id ?? -1,
+                SubFolders = folder.SubFolders?.Select(sb => new SubFolderDTO() { Id = sb.Id, Name = sb.Name}).ToList() ?? new List<SubFolderDTO>()
             };
 
             return infoFolder;

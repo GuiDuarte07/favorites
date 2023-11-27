@@ -1,9 +1,7 @@
 ﻿using favorites.Models;
 using favorites.Models.DTOs.Folder;
-using favorites.Models.DTOs.User;
 using favorites.Models.Entities;
 using favorites.Repositories.Interfaces;
-using favorites.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace favorites.Repositories

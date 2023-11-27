@@ -2,9 +2,6 @@
 using favorites.Models.DTOs.Favorite;
 using favorites.Models.Entities;
 using favorites.Repositories.Interfaces;
-using static Azure.Core.HttpHeader;
-using System.Numerics;
-using System.Security.Policy;
 
 namespace favorites.Repositories
 {
@@ -48,14 +45,29 @@ namespace favorites.Repositories
         {
             var favorite = await _context.Favorites.FindAsync(updateFavoriteDetails.Id) ?? throw new NullReferenceException();
 
-            favorite.Name = updateFavoriteDetails.Name;
-            favorite.Url = updateFavoriteDetails.Url;
-            favorite.ContentType = updateFavoriteDetails.ContentType;
-            favorite.Complete = updateFavoriteDetails.Complete;
-            favorite.FaviconUrl = updateFavoriteDetails.FaviconUrl;
-            favorite.Fixed = updateFavoriteDetails.Fixed ?? false;
-            favorite.Notes = updateFavoriteDetails.Notes;
-            favorite.TimeSpentTicks = updateFavoriteDetails.TimeSpentTicks;
+            if (updateFavoriteDetails.Name != null)
+                favorite.Name = updateFavoriteDetails.Name;
+
+            if (updateFavoriteDetails.Url != null)
+                favorite.Url = updateFavoriteDetails.Url;
+
+            if (updateFavoriteDetails.ContentType != null)
+                favorite.ContentType = updateFavoriteDetails.ContentType;
+
+            if (updateFavoriteDetails.Complete.HasValue)
+                favorite.Complete = updateFavoriteDetails.Complete.Value;
+
+            if (updateFavoriteDetails.FaviconUrl != null)
+                favorite.FaviconUrl = updateFavoriteDetails.FaviconUrl;
+
+            if (updateFavoriteDetails.Fixed.HasValue)
+                favorite.Fixed = updateFavoriteDetails.Fixed.Value;
+
+            if (updateFavoriteDetails.Notes != null)
+                favorite.Notes = updateFavoriteDetails.Notes;
+
+            if (updateFavoriteDetails.TimeSpentTicks.HasValue)
+                favorite.TimeSpentTicks = updateFavoriteDetails.TimeSpentTicks.Value;
 
             var updatedFavorite = _context.Favorites.Update(favorite);
             await _context.SaveChangesAsync();
