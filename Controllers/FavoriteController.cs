@@ -1,6 +1,7 @@
 ﻿using favorites.Models.DTOs.Favorite;
 using favorites.Models.Entities;
 using favorites.Repositories.Interfaces;
+using favorites.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace favorites.Controllers
     [ApiController]
     public class FavoriteController : ControllerBase
     {
-        private readonly IFavoriteRepository _favoriteRepository;
-        public FavoriteController(IFavoriteRepository favoriteRepository)
+        private readonly IFavoriteRepository _favoriteRepository; 
+            private readonly ITokenService _tokenService;
+        public FavoriteController(IFavoriteRepository favoriteRepository, ITokenService tokenService)
         {
             _favoriteRepository = favoriteRepository;
+            _tokenService = tokenService;
         }
 
         [Authorize]
@@ -27,17 +30,27 @@ namespace favorites.Controllers
         }
 
         [Authorize]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Favorite?>> GetFavorite(long id)
+        [HttpGet("{folderId}")]
+        public async Task<ActionResult<List<Favorite>?>> GetFavorites(long folderId)
         {
-            var favorite = await _favoriteRepository.GetFavoriteAsync(id);
+            var token = HttpContext.Request.Headers["Authorization"]
+            .FirstOrDefault()?.Split(" ").Last();
 
-            if (favorite == null)
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+
+            long userId = _tokenService.GetUserIdFromToken(token);
+
+            var favorites = await _favoriteRepository.GetFavoritesAsync(folderId, userId);
+
+            if (favorites == null)
             {
                 return NotFound();
             }
 
-            return favorite;
+            return favorites;
         }
 
         [Authorize]

@@ -11,9 +11,11 @@ namespace favorites.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        public UserController(IUserRepository userRepository) 
+        private readonly IFolderRepository _folderRepository;
+        public UserController(IUserRepository userRepository, IFolderRepository folderRepository) 
         {
             _userRepository = userRepository;
+            _folderRepository = folderRepository;
         }
 
         [HttpPost]
@@ -25,9 +27,32 @@ namespace favorites.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userInfoDTO = await _userRepository.CreateUserAsync(userDTO);
+            var user = await _userRepository.CreateUserAsync(userDTO);
 
-            return CreatedAtAction(nameof(GetUser), new { id = userInfoDTO.Id }, userInfoDTO);
+            await _folderRepository.CreateFolderAsync(
+                new CreateFolderDTO { Name = "Favoritos", ParentFolderId = null },
+                user.Id
+                );
+
+            var userInfo = new InfoUserDTO()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Folders = user.Folders?.Select(folder => new InfoFolderDTO
+                {
+                    Id = folder.Id,
+                    Name = folder.Name,
+                    UserId = user.Id,
+                    SubFolders = folder.SubFolders?.Select(subFolder => new SubFolderDTO
+                    {
+                        Id = subFolder.Id,
+                        Name = subFolder.Name
+                    }).ToList() ?? new List<SubFolderDTO>()
+                }).ToList() ?? new List<InfoFolderDTO>()
+            };
+
+            return CreatedAtAction(nameof(GetUser), new { id = userInfo.Id }, userInfo);
         }
 
         [Authorize]

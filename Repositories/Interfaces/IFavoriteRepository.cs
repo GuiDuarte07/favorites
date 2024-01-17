@@ -5,7 +5,7 @@ namespace favorites.Repositories.Interfaces
 {
     public interface IFavoriteRepository
     {
-        public Task<Favorite?> GetFavoriteAsync(long id);
+        public Task<List<Favorite>?> GetFavoritesAsync(long? folderId, long userId);
         public Task<Favorite> CreateFavoriteAsync(CreateFavoriteDTO createFavoriteDetails);
         public Task<Favorite?> UpdateFavoriteAsync(UpdateFavoriteDTO updateFavoriteDetails);
     }

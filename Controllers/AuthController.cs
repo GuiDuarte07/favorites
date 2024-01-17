@@ -21,7 +21,7 @@ namespace favorites.Controllers
         }
 
         [HttpPost]
-        [Route("login")]
+        [Route("Login")]
         [AllowAnonymous]
         public async Task<ActionResult<dynamic>> Autenticate([FromBody] LoginUserDTO userCredentials)
         {

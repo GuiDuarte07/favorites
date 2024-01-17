@@ -31,6 +31,11 @@ namespace favorites.Controllers
                 return Unauthorized();
             }
 
+            if (folder.Name.ToLower() == "Favoritos".ToLower())
+            {
+                return BadRequest("'Favoritos' não é um nome de pasta válido");
+            }
+
             long userId = _tokenService.GetUserIdFromToken(token);
 
             var createdFolder = await _folderRepository.CreateFolderAsync(folder, userId);

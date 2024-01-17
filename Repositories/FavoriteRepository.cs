@@ -2,6 +2,7 @@
 using favorites.Models.DTOs.Favorite;
 using favorites.Models.Entities;
 using favorites.Repositories.Interfaces;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace favorites.Repositories
 {
@@ -34,11 +35,13 @@ namespace favorites.Repositories
             return favorite.Entity;
         }
 
-        public async Task<Favorite?> GetFavoriteAsync(long id)
+        public async Task<List<Favorite>?> GetFavoritesAsync(long? folderId, long userId)
         {
-            var favorite = await _context.Favorites.FindAsync(id);
+            var favorites = _context.Favorites
+                .Where(f => f.FolderId == folderId && f.Folder.UserId == userId)
+                .ToList();
 
-            return favorite;
+            return favorites;
         }
 
         public async Task<Favorite?> UpdateFavoriteAsync(UpdateFavoriteDTO updateFavoriteDetails)
