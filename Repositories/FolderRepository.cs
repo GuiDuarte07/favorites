@@ -14,7 +14,7 @@ namespace favorites.Repositories
         {
             _context = context;
         }
-        public async Task<Folder> CreateFolderAsync(CreateFolderDTO folder, long userId)
+        public async Task<Folder> CreateFolderAsync(CreateFolderRequestDTO folder, long userId)
         {
             var user = await _context.Users.FindAsync(userId) ?? throw new NullReferenceException("O usuário não pôde ser encontrado.");
 
@@ -33,7 +33,7 @@ namespace favorites.Repositories
             return folder;
         }
 
-        public async Task<Folder?> UpdateFolderAsync(UpdateFolderDTO folderUpdateInfo)
+        public async Task<Folder?> UpdateFolderAsync(UpdateFolderRequestDTO folderUpdateInfo)
         {
             var folderToUpdate = _context.Folders.FirstOrDefault(f => f.Id == folderUpdateInfo.Id);
 

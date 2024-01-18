@@ -14,7 +14,7 @@ namespace favorites.Repositories
         {
             _context = context;
         }
-        public async Task<Favorite> CreateFavoriteAsync(CreateFavoriteDTO createFavoriteDetails)
+        public async Task<Favorite> CreateFavoriteAsync(CreateFavoriteRequestDTO createFavoriteDetails)
         {
             var newFavorite = new Favorite()
             {
@@ -44,7 +44,7 @@ namespace favorites.Repositories
             return favorites;
         }
 
-        public async Task<Favorite?> UpdateFavoriteAsync(UpdateFavoriteDTO updateFavoriteDetails)
+        public async Task<Favorite?> UpdateFavoriteAsync(UpdateFavoriteRequestDTO updateFavoriteDetails)
         {
             var favorite = await _context.Favorites.FindAsync(updateFavoriteDetails.Id) ?? throw new NullReferenceException();
 

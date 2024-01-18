@@ -19,7 +19,7 @@ namespace favorites.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<InfoUserDTO>> CreateUser(CreateUserDO userDTO)
+        public async Task<ActionResult<InfoUserResponseDTO>> CreateUser(CreateUserRequestDTO userDTO)
         {
             // Não sei se essa verificação é necessária
             if (!ModelState.IsValid)
@@ -30,26 +30,26 @@ namespace favorites.Controllers
             var user = await _userRepository.CreateUserAsync(userDTO);
 
             await _folderRepository.CreateFolderAsync(
-                new CreateFolderDTO { Name = "Favoritos", ParentFolderId = null },
+                new CreateFolderRequestDTO { Name = "Favoritos", ParentFolderId = null },
                 user.Id
                 );
 
-            var userInfo = new InfoUserDTO()
+            var userInfo = new InfoUserResponseDTO()
             {
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Folders = user.Folders?.Select(folder => new InfoFolderDTO
+                Folders = user.Folders?.Select(folder => new InfoFolderResponseDTO
                 {
                     Id = folder.Id,
                     Name = folder.Name,
                     UserId = user.Id,
-                    SubFolders = folder.SubFolders?.Select(subFolder => new SubFolderDTO
+                    SubFolders = folder.SubFolders?.Select(subFolder => new SubFolderResponseDTO
                     {
                         Id = subFolder.Id,
                         Name = subFolder.Name
-                    }).ToList() ?? new List<SubFolderDTO>()
-                }).ToList() ?? new List<InfoFolderDTO>()
+                    }).ToList() ?? new List<SubFolderResponseDTO>()
+                }).ToList() ?? new List<InfoFolderResponseDTO>()
             };
 
             return CreatedAtAction(nameof(GetUser), new { id = userInfo.Id }, userInfo);
@@ -57,7 +57,7 @@ namespace favorites.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<InfoUserDTO>> GetUser(long id)
+        public async Task<ActionResult<InfoUserResponseDTO>> GetUser(long id)
         {
             
             var user = await _userRepository.GetUserByIdAsync(id);
@@ -67,22 +67,22 @@ namespace favorites.Controllers
                 return NotFound();
             }
 
-            var userInfo = new InfoUserDTO() 
+            var userInfo = new InfoUserResponseDTO() 
             {
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Folders = user.Folders?.Select(folder => new InfoFolderDTO
+                Folders = user.Folders?.Select(folder => new InfoFolderResponseDTO
                 {
                     Id = folder.Id,
                     Name = folder.Name,
                     UserId = user.Id,
-                    SubFolders = folder.SubFolders?.Select(subFolder => new SubFolderDTO
+                    SubFolders = folder.SubFolders?.Select(subFolder => new SubFolderResponseDTO
                     {
                         Id = subFolder.Id,
                         Name = subFolder.Name
-                    }).ToList() ?? new List<SubFolderDTO>()
-                }).ToList() ?? new List<InfoFolderDTO>()
+                    }).ToList() ?? new List<SubFolderResponseDTO>()
+                }).ToList() ?? new List<InfoFolderResponseDTO>()
             };
 
             return userInfo;

@@ -21,7 +21,7 @@ namespace favorites.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Favorite>> CreateFavorite([FromBody] CreateFavoriteDTO Createfavorite)
+        public async Task<ActionResult<Favorite>> CreateFavorite([FromBody] CreateFavoriteRequestDTO Createfavorite)
         {
 
             var createdFolder = await _favoriteRepository.CreateFavoriteAsync(Createfavorite);
@@ -55,7 +55,7 @@ namespace favorites.Controllers
 
         [Authorize]
         [HttpPut]
-        public async Task<ActionResult> UpdateFolder([FromBody] UpdateFavoriteDTO favoriteUpdateInfo)
+        public async Task<ActionResult> UpdateFolder([FromBody] UpdateFavoriteRequestDTO favoriteUpdateInfo)
         {
             var updatedFavorite = await _favoriteRepository.UpdateFavoriteAsync(favoriteUpdateInfo);
 

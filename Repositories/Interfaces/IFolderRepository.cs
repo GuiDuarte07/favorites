@@ -5,9 +5,9 @@ namespace favorites.Repositories.Interfaces
 {
     public interface IFolderRepository
     {
-        public Task<Folder> CreateFolderAsync(CreateFolderDTO folder, long UserId);
+        public Task<Folder> CreateFolderAsync(CreateFolderRequestDTO folder, long UserId);
 
-        public Task<Folder?> UpdateFolderAsync(UpdateFolderDTO folderUpdateInfo);
+        public Task<Folder?> UpdateFolderAsync(UpdateFolderRequestDTO folderUpdateInfo);
 
         public Folder? GetFolder(long id);
     }

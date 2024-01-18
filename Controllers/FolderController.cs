@@ -21,7 +21,7 @@ namespace favorites.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Folder>> CreateFolder([FromBody] CreateFolderDTO folder)
+        public async Task<ActionResult<Folder>> CreateFolder([FromBody] CreateFolderRequestDTO folder)
         {
             var token = HttpContext.Request.Headers["Authorization"]
             .FirstOrDefault()?.Split(" ").Last();
@@ -45,7 +45,7 @@ namespace favorites.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        public ActionResult<InfoFolderDTO?> GetFolder(long id)
+        public ActionResult<InfoFolderResponseDTO?> GetFolder(long id)
         {
             var folder = _folderRepository.GetFolder(id);
 
@@ -54,12 +54,12 @@ namespace favorites.Controllers
                 return NotFound();
             }
 
-            var infoFolder = new InfoFolderDTO() 
+            var infoFolder = new InfoFolderResponseDTO() 
             {
                 Id = folder.Id, 
                 Name = folder.Name,
                 UserId = folder.User?.Id ?? -1,
-                SubFolders = folder.SubFolders?.Select(sb => new SubFolderDTO() { Id = sb.Id, Name = sb.Name}).ToList() ?? new List<SubFolderDTO>()
+                SubFolders = folder.SubFolders?.Select(sb => new SubFolderResponseDTO() { Id = sb.Id, Name = sb.Name}).ToList() ?? new List<SubFolderResponseDTO>()
             };
 
             return infoFolder;
@@ -67,7 +67,7 @@ namespace favorites.Controllers
 
         [Authorize]
         [HttpPut]
-        public async Task<ActionResult> UpdateFolder([FromBody] UpdateFolderDTO folderUpdateInfo) 
+        public async Task<ActionResult> UpdateFolder([FromBody] UpdateFolderRequestDTO folderUpdateInfo) 
         {
             var updatedFolder = await _folderRepository.UpdateFolderAsync(folderUpdateInfo);
 

@@ -1,7 +1,10 @@
-﻿namespace favorites.Models.DTOs.Favorite
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace favorites.Models.DTOs.Favorite
 {
-    public class UpdateFavoriteDTO
+    public class UpdateFavoriteRequestDTO
     {
+        [Required(ErrorMessage = "O campo 'Id' é obrigatório.")]
         public long Id {  get; set; }
         public string? Name { get; set; }
         public string? Url { get; set; }

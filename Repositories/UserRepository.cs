@@ -18,7 +18,7 @@ namespace favorites.Repositories
             _hashService = hashService;
         }
 
-        public async Task<User> CreateUserAsync(CreateUserDO userDTO)
+        public async Task<User> CreateUserAsync(CreateUserRequestDTO userDTO)
         {
             // Fazendo o hash da senha
             string hashedPassword = _hashService.HashPassword(userDTO.Password);

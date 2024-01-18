@@ -6,7 +6,7 @@ namespace favorites.Repositories.Interfaces
     public interface IUserRepository
     {
         Task<User?> GetUserByIdAsync(long id);
-        Task<User> CreateUserAsync(CreateUserDO userDTO);
+        Task<User> CreateUserAsync(CreateUserRequestDTO userDTO);
         Task<User?> GetUserByEmailAsync(string email);
     }
 }

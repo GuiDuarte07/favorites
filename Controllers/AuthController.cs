@@ -23,7 +23,7 @@ namespace favorites.Controllers
         [HttpPost]
         [Route("Login")]
         [AllowAnonymous]
-        public async Task<ActionResult<dynamic>> Autenticate([FromBody] LoginUserDTO userCredentials)
+        public async Task<ActionResult<dynamic>> Autenticate([FromBody] LoginUserRequestDTO userCredentials)
         {
             var user = await _authRepository.ValidateCredentialsAsync(userCredentials.Email, userCredentials.Password);
 
@@ -36,24 +36,24 @@ namespace favorites.Controllers
 
             return new
             {
-                user = new InfoUserDTO()
+                user = new InfoUserResponseDTO()
                 {
                     Email = user.Email,
                     Id = user.Id,
                     Name = user.Name,
                     Folders = user.Folders?
-                                .Select(f => new InfoFolderDTO()
+                        .Select(f => new InfoFolderResponseDTO()
+                        {
+                            Id = f.Id,
+                            Name = f.Name,
+                            UserId = user.Id,
+                            SubFolders = f.SubFolders?
+                                .Select(sb => new SubFolderResponseDTO()
                                 {
-                                    Id = f.Id,
-                                    Name = f.Name,
-                                    UserId = user.Id,
-                                    SubFolders = f.SubFolders?
-                                        .Select(sb => new SubFolderDTO()
-                                        {
-                                            Id = sb.Id,
-                                            Name = sb.Name
-                                        }).ToList() ?? new List<SubFolderDTO>(),
-                                }).ToList() ?? new List<InfoFolderDTO>(),
+                                    Id = sb.Id,
+                                    Name = sb.Name
+                                }).ToList() ?? new List<SubFolderResponseDTO>(),
+                        }).ToList() ?? new List<InfoFolderResponseDTO>(),
                 },
                 token
             };
